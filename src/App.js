@@ -1,5 +1,5 @@
 import "./index";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useParams } from "react";
 import Nav from "./components/Nav";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
@@ -34,10 +34,6 @@ function App() {
   return length
   }
 
-  useEffect(() => {
-    console.log(cart);
-  }, [cart]);
-
   return (
     <Router>
       <div className="App">
@@ -46,9 +42,7 @@ function App() {
         <Route path="/books" exact render={() => <Books books={books} />} />
         <Route
           path="/books/:id"
-          render={() => (
-            <SelectedBook addToCart={AddToCart} books={books} cart={cart} />
-          )}
+          exact render={() => (<SelectedBook addToCart={AddToCart} books={books} cart={cart} />)}
         />
         <Route
           path="/cart"
