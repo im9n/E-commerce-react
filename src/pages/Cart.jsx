@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import EmptyCart from "../assets/empty_cart.svg"
 
-const Cart = ({ books, cart, bookQuantity }) => {
+const Cart = ({ books, cart, bookQuantity, removeFromCart }) => {
   const total = () => {
    let totalPrice = 0;
    cart.forEach(item => totalPrice += +((item.salePrice || item.originalPrice) * item.quantity))
@@ -47,7 +49,7 @@ const Cart = ({ books, cart, bookQuantity }) => {
                               : item.originalPrice
                             ).toFixed(2)}
                           </span>
-                          <button className="cart__book--remove">Remove</button>
+                          <button className="cart__book--remove" onClick={() => removeFromCart(item)}>Remove</button>
                         </div>
                       </div>
                       <div className="cart__quantity">
@@ -75,9 +77,16 @@ const Cart = ({ books, cart, bookQuantity }) => {
                   );
                 })}
               </div>
+              {cart.length === 0 && (<div className="cart__empty">
+                <img src={EmptyCart} alt="" className="cart__empty--img" />
+                <h2>You don't have any books in your cart!</h2>
+                <Link to="/books">
+                <button className="btn">Browse Books</button>
+                </Link>
+              </div>)}
             </div>
 
-            <div className="total">
+            {cart.length > 0 && (<div className="total">
               <div className="total__item total__sub-total">
                 <span>Subtotal</span>
                 <span>${subtotal.toFixed(2)}</span>
@@ -98,7 +107,7 @@ const Cart = ({ books, cart, bookQuantity }) => {
               >
                 Proceed to Checkout
               </button>
-            </div>
+            </div>)}
           </div>
         </div>
       </main>

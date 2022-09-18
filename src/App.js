@@ -9,18 +9,29 @@ import { books } from "./data";
 import SelectedBook from "./pages/SelectedBook";
 import Cart from "./pages/Cart";
 
-
 function App() {
   const [cart, setCart] = useState([]);
 
-  function bookQuantity(book, quantity){
-   setCart(cart.map(item => 
-    item.id === book.id ? {...item, quantity: +quantity} : item
-   ))
+  function bookQuantity(book, quantity) {
+    setCart(
+      cart.map((item) =>
+        item.id === book.id ? { ...item, quantity: +quantity } : item
+      )
+    );
   }
 
-  function AddToCart(book){
-    return setCart([...cart, {...book, quantity: 1}])
+  function AddToCart(book) {
+    setCart([...cart, { ...book, quantity: 1 }]);
+  }
+
+  function removeFromCart(book) {
+    setCart(cart.filter((item) => item.id !== book.id));
+  }
+
+  function cartLength(){
+  let length = 0
+  cart.forEach(book => length += book.quantity)
+  return length
   }
 
   useEffect(() => {
@@ -30,14 +41,21 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Nav />
+        <Nav cart={cart} cartLength={cartLength} />
         <Route path="/" exact component={Home} />
         <Route path="/books" exact render={() => <Books books={books} />} />
         <Route
           path="/books/:id"
-          render={() => <SelectedBook addToCart={AddToCart} books={books} cart={cart} />}
+          render={() => (
+            <SelectedBook addToCart={AddToCart} books={books} cart={cart} />
+          )}
         />
-      <Route path="/cart" render={() => <Cart books={books} cart={cart} bookQuantity={bookQuantity} />} />
+        <Route
+          path="/cart"
+          render={() => (
+            <Cart books={books} cart={cart} bookQuantity={bookQuantity} removeFromCart={removeFromCart} />
+          )}
+        />
         <Footer />
       </div>
     </Router>
